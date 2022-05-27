@@ -45,4 +45,29 @@ public class IndexModel : PageModel
                 }
             }
     }
+    public void OnPost(){
+        ViewData["CultureKey"] = Context.CultureKey;
+        ViewData["Brand"] = Context.Brand;
+        ViewData["Pages"] = Context.Pages;
+        ViewData["Languages"] = Context.Languages;
+        rx = new Regex(@"(\w.*)=(\w.*)",RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        var m = rx.Matches(Request.QueryString.ToString());
+        if(m.FirstOrDefault() != null){
+            if(Request.Query["handler"].Count > 0)
+            {
+                Response.Redirect("/" + Request.Query["handler"]!.ToString());
+            }
+        }
+        ViewData["Message"] = "post";
+        var p = Request.HttpContext.GetRouteData()!.Values["Page"]!;
+        rx = new Regex(@"\w.*",RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        m = rx.Matches(p.ToString()!);
+        ViewData["Action"] = m.FirstOrDefault()!.Value;
+        if (ViewData["Action"]!.GetType() == typeof(String)) {
+            var current = Context.Pages.Where(p => p.ActionKey == ViewData["Action"]!.ToString()).FirstOrDefault();
+            if(current != null){
+                ViewData["Title"] = current.Title;
+            }
+        }
+    }
 }

@@ -52,7 +52,7 @@
                 </div>
                 <div style="position:relative;right:0px;">
                     <form asp-controller="Home" asp-action="Index" method="post" style="display:inline-block;">
-                        <select asp-items="@languagesList" style="display:inline-block;height:1.5rem;margin:0px 5px 0px 5px;" onchange="javascript:form.submit();"></select>
+                        <select asp-items="@languagesList" style="display:inline-block;height:1.5rem;margin:0px 5px 0px 5px;" onchange="javascript:this.parent.submit();"></select>
                     </form>
                     @if (isSignin)
                     {
