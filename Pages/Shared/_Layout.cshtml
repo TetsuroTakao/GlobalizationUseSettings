@@ -1,0 +1,106 @@
+﻿@{
+    var pages = ViewData["Pages"] as List<Page>;
+    var isSignin = true;
+    var AccountName = "髙尾哲朗";
+    var yearsList = new List<SelectListItem>
+    {
+        new SelectListItem{ Value = "1", Text = DateTime.Today.Year.ToString()},
+        new SelectListItem{ Value = "2", Text = (DateTime.Today.Year + 1).ToString()}
+    };
+    var languages = ViewData["Languages"]! as List<string>;
+    var languagesList = new List<SelectListItem>();
+    var i = 0;
+    foreach (var item in languages!)
+    {
+        i++;
+        languagesList.Add(new SelectListItem{ Value = i.ToString(), Text = item});
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @ViewData["Brand"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GlobalizationUseSettings.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@ViewData["Brand"]</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @foreach (var item in pages!)
+                        {
+                            <li class="nav-item">
+                                @if(ViewData["Title"]!.ToString()==item.Title) {
+                                    <span style="padding:.5rem;display:inline-block;">@item.Title</span>
+                                }
+                                else{
+                                    <a class="nav-link text-dark" asp-page-handler="@item.ActionKey">@item.Title</a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div style="position:relative;right:0px;">
+                    <form asp-controller="Home" asp-action="Index" method="post" style="display:inline-block;">
+                        <select asp-items="@languagesList" style="display:inline-block;height:1.5rem;margin:0px 5px 0px 5px;" onchange="javascript:form.submit();"></select>
+                    </form>
+                    @if (isSignin)
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="SignOut" style="display:inline-block;">@AccountName</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="SignIn">
+                            <svg width="180" height="30" xmlns="http://www.w3.org/2000/svg" class="SignInButton">
+                            <g>
+                            <title>background</title>
+                            <rect x="-1" y="-1" width="182" height="32" id="canvas_background" fill="none"/>
+                            </g>
+
+                            <g>
+                            <title>ログインすると操作できるようになります。</title>
+                            <g id="svg_10" stroke="null">
+                            <rect x="2" y="5" width="8" height="8" fill="#F35325" id="svg_2" stroke="null"/>
+                            <rect x="11" y="5" width="8" height="8" fill="#81BC06" id="svg_3" stroke="null"/>
+                            <rect x="2" y="14" width="8" height="8" fill="#05A6F0" id="svg_4" stroke="null"/>
+                            <rect x="11" y="14" width="8" height="8" fill="#FFBA08" id="svg_5" stroke="null"/>
+                            </g>
+                            <g id="svg_9" stroke="null">
+                            <text text-decoration="none" font-family="'Segoe UI Semibold', 'Segoe UI'" font-size="0.7rem" fill="Blue" id="svg_6" x="22" y="18" stroke="null">Sign in with Microsoft account</text>
+                            </g>
+                            </g>
+                            </svg>
+                        </a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - @ViewData["Brand"] - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+        <div style="position:relative;top:-60px;line-height:1rem;color:#f00;">@ViewData["Message"]</div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

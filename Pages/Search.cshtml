@@ -1,0 +1,59 @@
+@page
+@model SearchModel
+@using System.Globalization;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    
+    var date = ViewData["Date"]!;
+    var start = ViewData["Start"]!;
+    var end = ViewData["End"]!;
+    var movieTitle = ViewData["MovieTitle"]!;
+
+    var areaTitle = ViewData["AreaTitle"]!;
+    var areaLead = ViewData["AreaLead"]!;
+    var searchButton = ViewData["SearchButton"]!;
+    var reserveSeat = ViewData["ReserveSeat"]!;
+    var culture = CultureInfo.GetCultureInfo((string)ViewData["CultureKey"]!);
+    var yearsList = new List<SelectListItem>
+    {
+        new SelectListItem{ Value = "1", Text = DateTime.Today.Year.ToString()},
+        new SelectListItem{ Value = "2", Text = (DateTime.Today.Year + 1).ToString()}
+    };
+}
+<div class="text-center">
+    <h4>@areaTitle</h4>
+    <div style="border:thin solid #00f;text-align:left;padding:5px;">
+        <div>@areaLead</div>
+        <form asp-controller="Home" asp-action="Index" method="post">
+            <div style="vertical-align:middle;">
+                <span>@date:</span>
+                <select asp-items="@yearsList" style="height:1.5rem;margin:0px 5px 0px 5px;vertical-align:top;"></select>
+                <span id="from" style="width:5rem;height:1.5rem;text-align:right;">@DateTime.Today.ToLocalTime().ToString("m",culture)</span>
+                <script>
+                    function setValue(d) {
+                        if("ja-jp"=="@ViewData["CultureKey"]"){
+                            document.getElementById('from').innerHTML = (new Date(d).getMonth() + 1) + '月' + new Date(d).getDate() + '日';
+                        }
+                        else{
+                            document.getElementById('from').innerHTML = new Date(d).getDate() + ',' + new Date(d).toString();
+                        }
+                    }
+                </script>
+                <input type="date" style="width:1.5rem;height:1.5rem;" value='@DateTime.Today.ToLocalTime().ToString("m",culture)' onchange="setValue(this.value)" />
+            </div>
+            <div style="vertical-align:middle;">
+                <span>@start: </span><input type="time" name="to" style="text-align:right;" value='@DateTime.Now.ToLocalTime().ToShortTimeString()' />
+                <span>～</span><input type="time" name="to" style="text-align:right;" value='' />
+            </div>
+            <div style="vertical-align:middle;">
+                <span>@movieTitle: </span><input type="text" name="to" style="width:150px;" value='' />
+            </div>
+            <div>
+                <input type="button" name="exec" style="width:150px;" value='@searchButton' />
+                <input type="checkbox" name="exec"/>@reserveSeat
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
