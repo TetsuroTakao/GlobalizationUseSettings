@@ -15,7 +15,8 @@ namespace GlobalizationUseSettings.Pages
             Context.Languages.Add(ApplicationContext.English);
             Context.Languages.Add(ApplicationContext.Japanese);
             Context.Languages.Add(ApplicationContext.Spanish);
-            configuration.GetSection(Context.Languages.FirstOrDefault()).Bind(Context);
+            // configuration.GetSection(Context.Languages.FirstOrDefault()).Bind(Context);
+            configuration.GetSection(ApplicationContext.Japanese).Bind(Context);
             _logger = logger;
        }
 
